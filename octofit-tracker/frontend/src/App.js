@@ -1,60 +1,49 @@
 
-import React, { useEffect, useState } from 'react';
-import './App.css';
+
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Activities from './components/Activities';
+import Leaderboard from './components/Leaderboard';
+import Teams from './components/Teams';
+import Users from './components/Users';
+import Workouts from './components/Workouts';
+import logo from './octofitapp-small.png';
 
 function App() {
-  const [activities, setActivities] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    // Use window.location for dynamic host, fallback to localhost
-    let apiBase = window.location.hostname.includes('github.dev')
-      ? window.location.origin.replace(/:\d+/, ':8000')
-      : 'http://localhost:8000';
-    fetch(`${apiBase}/api/activities/`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        return res.json();
-      })
-      .then((data) => {
-        setActivities(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
-
   return (
-    <div className="container mt-4">
-      <h1>OctoFit Activities</h1>
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-danger">Error: {error}</p>}
-      {!loading && !error && (
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Type</th>
-              <th>Duration (min)</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {activities.map((a) => (
-              <tr key={a._id}>
-                <td>{a.user?.name || a.user}</td>
-                <td>{a.type}</td>
-                <td>{a.duration}</td>
-                <td>{a.date}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+    <Router>
+      <div>
+        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+          <div className="container-fluid">
+            <Link className="navbar-brand d-flex align-items-center fw-bold" to="/">
+              <img src={logo} alt="OctoFit Logo" className="octofit-logo me-2" />
+              OctoFit Tracker
+            </Link>
+            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarNav">
+              <ul className="navbar-nav">
+                <li className="nav-item"><Link className="nav-link" to="/activities">Activities</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/leaderboard">Leaderboard</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/teams">Teams</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/users">Users</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/workouts">Workouts</Link></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <main className="container py-4">
+          <Routes>
+            <Route path="/" element={<Activities />} />
+            <Route path="/activities" element={<Activities />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/teams" element={<Teams />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/workouts" element={<Workouts />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 
