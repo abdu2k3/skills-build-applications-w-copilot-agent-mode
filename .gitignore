@@ -1,3 +1,18 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+
+# Virtual environment for backend
+octofit-tracker/backend/venv/
+
+# Node modules
+node_modules/
+
+# Editor directories
+.vscode/
+
+# Environment files
+.env
 .DS_Store
 
 # Virtual Environment
